@@ -211,8 +211,8 @@ presets:
     - name: TF_VAR_ibmcloud_api_key
       valueFrom:
         secretKeyRef:
-          name: ibm-cloud-credentials
-          key: TF_VAR_ibmcloud_api_key
+          name: ibmcloud-iam
+          key: key
   volumes:
     - name: ssh-privatekey
       secret:
