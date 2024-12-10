@@ -91,7 +91,7 @@ tide:
   sync_period: 2m
   queries:
     - orgs:
-        - ppc64le-cloud
+        - linux-on-ibm-z
         - ocp-power-automation
         - PDeXchange
       labels:
@@ -210,11 +210,11 @@ presets:
       name: powercloud-bot-key
       readOnly: true
   env:
-    - name: TF_VAR_powervs_api_key
+    - name: TF_VAR_VPC_api_key
       valueFrom:
         secretKeyRef:
           name: ibm-cloud-credentials
-          key: TF_VAR_powervs_api_key
+          key: TF_VAR_VPC_api_key
   volumes:
     - name: powercloud-bot-key
       secret:
@@ -236,9 +236,9 @@ presets:
           name: knative-apikey
           key: apikey
     - name: KO_FLAGS
-      value: --platform=linux/ppc64le
+      value: --platform=linux/s390x
     - name: PLATFORM
-      value: linux/ppc64le
+      value: linux/s390x
     - name: INGRESS_CLASS
       value: contour.ingress.networking.knative.dev
     - name: KO_DOCKER_REPO
@@ -248,7 +248,7 @@ presets:
 
   volumeMounts:
     - name: ssh-key
-      mountPath: /root/.ssh/
+      mountPath: /root/.ssh/vpc
       readOnly: true
     - name: config-json
       mountPath: /root/.docker/
@@ -273,7 +273,7 @@ presets:
       name: s3-hmac-credentials
       readOnly: true
   env:
-    - name: TF_VAR_powervs_api_key
+    - name: TF_VAR_VPC_api_key
       valueFrom:
         secretKeyRef:
           name: ibmcloud-iam
