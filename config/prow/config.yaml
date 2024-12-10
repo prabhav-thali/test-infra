@@ -205,16 +205,16 @@ presets:
     preset-ssh-bot: "true"
   volumeMounts:
     - mountPath: /etc/secret-volume
-      name: ssh-privatekey
+      name: powercloud-bot-key
       readOnly: true
   env:
     - name: TF_VAR_ibmcloud_api_key
       valueFrom:
         secretKeyRef:
           name: ibmcloud-iam
-          key: key
+          key: TF_VAR_ibmcloud_api_key
   volumes:
-    - name: ssh-privatekey
+    - name: powercloud-bot-key
       secret:
         defaultMode: 256
         secretName: bot-ssh-secret
