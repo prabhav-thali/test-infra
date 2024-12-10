@@ -3,6 +3,7 @@ periodics:
     cron: "0 1/1 * * *"
     labels: 
       preset-ibmcloud-cred: "true"
+      preset-ssh-bot: "true"
     extra_refs:
       - base_ref: s390x-deployer
         org: linux-on-ibm-z
