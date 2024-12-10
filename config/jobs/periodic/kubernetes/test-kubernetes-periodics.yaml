@@ -45,15 +45,15 @@ periodics:
               set +o errexit
               kubetest2 tf --vpc-node-image-name ibm-ubuntu-22-04-4-minimal-s390x-3 \
                 --vpc-region eu-de --vpc-zone eu-de-1 \
-				        --vpc-resource-group rZVPCcloudRG \
-				        --vpc-ssh-key testloz \
-				        --vpc-node-profile bz2-4x16 \
-				        --ssh-private-key /etc/secret-volume/ssh-privatekey \
+                --vpc-resource-group rZVPCcloudRG \
+                --vpc-ssh-key testloz \
+                --vpc-node-profile bz2-4x16 \
+                --ssh-private-key /etc/secret-volume/ssh-privatekey \
                 --cluster-name config4-$TIMESTAMP \
                 --up --set-kubeconfig=false --auto-approve \
                 --retry-on-tf-failure 3 \
                 --break-kubetest-on-upfail true \
-				        --playbook k8s-ut-remote.yml
+                --playbook k8s-ut-remote.yml
               EXTERNAL_IP=`grep -E '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' $(pwd)/config4-$TIMESTAMP/hosts`
               kubetest2 tf --test=exec -- ssh -i /etc/secret-volume/ssh-privatekey root@$EXTERNAL_IP \
                 "/make-test.sh"; \
