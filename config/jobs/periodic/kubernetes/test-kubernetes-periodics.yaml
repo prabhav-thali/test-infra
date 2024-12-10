@@ -48,7 +48,7 @@ periodics:
               kubetest2 tf --vpc-node-image-name ibm-ubuntu-22-04-4-minimal-s390x-3 \
                 --vpc-region eu-de --vpc-zone eu-de-1 \
                 --vpc-resource-group rZVPCcloudRG \
-                --vpc-ssh-key testloz \
+                --vpc-ssh-key powercloud-bot-key \
                 --vpc-node-profile bz2-4x16 \
                 --ssh-private-key /etc/secret-volume/ssh-privatekey \
                 --cluster-name config4-$TIMESTAMP \
