@@ -212,7 +212,7 @@ presets:
       valueFrom:
         secretKeyRef:
           name: ibmcloud-iam
-          key: TF_VAR_ibmcloud_api_key
+          key: key
   volumes:
     - name: powercloud-bot-key
       secret:
