@@ -123,6 +123,7 @@ periodics:
                 --vpc-region eu-de --vpc-zone eu-de-1 \
                 --vpc-resource-group rZVPCcloudRG \
                 --vpc-ssh-key prabhav-loz \
+                --vpc-node-profile bz2-4x16 \
                 --ssh-private-key /etc/secret-volume/ssh-privatekey \
                 --cluster-name config3-$TIMESTAMP \
                 --up --set-kubeconfig=false --auto-approve \
