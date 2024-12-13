@@ -185,6 +185,7 @@ periodics:
                 --vpc-region eu-de --vpc-zone eu-de-1 \
                 --vpc-resource-group rZVPCcloudRG \
                 --vpc-ssh-key prabhav-loz \
+                --vpc-node-profile bz2-4x16 \
                 --ssh-private-key /etc/secret-volume/ssh-privatekey \
                 --s3-server $S3_SERVER --bucket $BUCKET  --directory $DIRECTORY \
                 --extra-vars=k8s_tar_bundles:kubernetes-server-linux-s390x.tar.gz,pod_subnet:10.244.0.0/16 \
