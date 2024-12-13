@@ -50,7 +50,6 @@ periodics:
                 --vpc-resource-group rZVPCcloudRG \
                 --vpc-ssh-key prabhav-loz \
                 --vpc-node-profile bz2-4x16 \
-                --extra-vars=pod_subnet:10.244.0.0/16 \
                 --ssh-private-key /etc/secret-volume/ssh-privatekey \
                 --cluster-name config4-$TIMESTAMP \
                 --up --set-kubeconfig=false --auto-approve \
@@ -188,7 +187,7 @@ periodics:
                           --vpc-ssh-key prabhav-loz \
                           --ssh-private-key /etc/secret-volume/ssh-privatekey \
                           --s3-server $S3_SERVER --bucket $BUCKET  --directory $DIRECTORY \
-                          --extra-vars=k8s_tar_bundles:kubernetes-server-linux-s390x.tar.gz \
+                          --extra-vars=k8s_tar_bundles:kubernetes-server-linux-s390x.tar.gz,pod_subnet:10.244.0.0/16 \
                           --build-version $K8S_BUILD_VERSION \
                           --release-marker $K8S_BUILD_VERSION \
                           --cluster-name config1-$TIMESTAMP \
