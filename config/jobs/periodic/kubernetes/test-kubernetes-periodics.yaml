@@ -50,6 +50,7 @@ periodics:
                 --vpc-resource-group rZVPCcloudRG \
                 --vpc-ssh-key prabhav-loz \
                 --vpc-node-profile bz2-4x16 \
+                --extra-vars=pod_subnet:10.244.0.0/16 \
                 --ssh-private-key /etc/secret-volume/ssh-privatekey \
                 --cluster-name config4-$TIMESTAMP \
                 --up --set-kubeconfig=false --auto-approve \
