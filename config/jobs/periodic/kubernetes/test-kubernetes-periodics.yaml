@@ -133,7 +133,7 @@ periodics:
           
               # Build and push artifacts to IBM COS
               REPOROOT=../../kubernetes/kubernetes
-              kubetest2 tf --build --repo-root $REPOROOT --stage cos://us/$BUCKET/$DIRECTORY --cos-cred-type cos_hmac
+              kubetest2 tf --build --repo-root $REPOROOT --stage cos://eu-de/$BUCKET/$DIRECTORY --cos-cred-type cos_hmac
               K8S_BUILD_VERSION=`cat $REPOROOT/_output/release-stage/server/linux-s390x/kubernetes/version`
           
               TIMESTAMP=$(date +%s)
