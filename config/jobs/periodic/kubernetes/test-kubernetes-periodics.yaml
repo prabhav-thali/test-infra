@@ -65,7 +65,7 @@ periodics:
                 --cluster-name config4-$TIMESTAMP \
                 --down --auto-approve --ignore-destroy-errors
               [ $rc != 0 ] && echo "ERROR: Unit Test suite exited with code:$rc"; exit $rc
-  - name: periodic-kubernetes-containerd-conformance-test-ppc64le
+  - name: periodic-kubernetes-containerd-conformance-test-s390x
     labels:
       preset-dind-enabled: "true"
       preset-ibmcloud-cred: "true"
