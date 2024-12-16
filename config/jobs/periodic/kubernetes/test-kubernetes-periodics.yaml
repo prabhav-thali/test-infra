@@ -83,14 +83,14 @@ periodics:
         - image: gcr.io/k8s-staging-test-infra/kubekins-e2e:v20241128-8df65c072f-master
           securityContext:
             privileged: true
-          # env:
-          #   - name: "BOSKOS_HOST"
-          #     value: "boskos.test-pods.svc.cluster.local"
-          # resources:
-          #   requests:
-          #     memory: "5Gi"
-          #   limits:
-          #     memory: "5Gi"
+          env:
+            - name: "BOSKOS_HOST"
+              value: "boskos.test-pods.svc.cluster.local"
+          resources:
+            requests:
+              memory: "5Gi"
+            limits:
+              memory: "5Gi"
           command:
             - runner.sh
           args:
@@ -108,15 +108,15 @@ periodics:
               make install-deployer-tf
               TF_LATEST="v1.9.8"
           
-              # RESOURCE_TYPE="vpc-k8s-conformance"
-              # USER="periodic-k8s-containerd-conformance-job"
+              RESOURCE_TYPE="vpc-service"
+              USER="periodic-k8s-containerd-conformance-job"
           
-              # trap cleanup EXIT
+              trap cleanup EXIT
           
-              # cleanup(){
-              #   # stop the boskos heartbeat
-              #   [[ -z ${HEART_BEAT_PID:-} ]] || kill -9 "${HEART_BEAT_PID}" || true
-              # }
+              cleanup(){
+                # stop the boskos heartbeat
+                [[ -z ${HEART_BEAT_PID:-} ]] || kill -9 "${HEART_BEAT_PID}" || true
+              }
           
               curl -fsSL https://releases.hashicorp.com/terraform/${TF_LATEST:1}/terraform_${TF_LATEST:1}_linux_amd64.zip -o ./terraform.zip
               unzip -o ./terraform.zip  >/dev/null 2>&1
@@ -139,50 +139,51 @@ periodics:
               TIMESTAMP=$(date +%s)
               jq --arg key0 'k8s-build-version' --arg value0 $K8S_BUILD_VERSION '. | .[$key0]=$value0' <<<'{}' > $ARTIFACTS/metadata.json
           
-              # set +o errexit
+              set +o errexit
           
-              # heartbeat_account(){
-              #   count=0
-              #   url="http://${BOSKOS_HOST}/update?name=${BOSKOS_RESOURCE_NAME}&state=busy&owner=${USER}"
-              #   while [ ${count} -lt 120 ]
-              #   do
-              #     status_code=$(curl -s -o /dev/null -w '%{http_code}' -X POST ${url})
-              #     if [[ ${status_code} != 200 ]]; then
-              #       echo "Heart beat to resource '${BOSKOS_RESOURCE_NAME}' failed due to invalid response, status code: ${status_code}"
-              #       exit 1
-              #     fi
-              #     count=$(( $count + 1 ))
-              #     sleep 60
-              #   done
-              # }
+              heartbeat_account(){
+                count=0
+                url="http://${BOSKOS_HOST}/update?name=${BOSKOS_RESOURCE_NAME}&state=busy&owner=${USER}"
+                while [ ${count} -lt 120 ]
+                do
+                  status_code=$(curl -s -o /dev/null -w '%{http_code}' -X POST ${url})
+                  if [[ ${status_code} != 200 ]]; then
+                    echo "Heart beat to resource '${BOSKOS_RESOURCE_NAME}' failed due to invalid response, status code: ${status_code}"
+                    exit 1
+                  fi
+                  count=$(( $count + 1 ))
+                  sleep 60
+                done
+              }
           
-              # if [ -n "${BOSKOS_HOST:-}" ]; then
-              #   set +o xtrace
-              #   url="http://${BOSKOS_HOST}/acquire?type=${RESOURCE_TYPE}&state=free&dest=busy&owner=${USER}"
-              #   output=$(curl -X POST ${url})
-              #   [ $? = 0 ] && status_code=200
+              if [ -n "${BOSKOS_HOST:-}" ]; then
+                set +o xtrace
+                url="http://${BOSKOS_HOST}/acquire?type=${RESOURCE_TYPE}&state=free&dest=busy&owner=${USER}"
+                output=$(curl -X POST ${url})
+                [ $? = 0 ] && status_code=200
           
-              #   if [[ ${status_code} == 200 && ${output} =~ "failed" ]]; then
-              #     echo "Failed to acquire resource from Boskos of type ${RESOURCE_TYPE}"
-              #     exit 1
-              #   elif [[ ${status_code} == 200 ]]; then
-              #     export BOSKOS_RESOURCE_NAME=$(echo ${output} | jq -r '.name')
-              #     export BOSKOS_REGION=$(echo ${output} | jq -r '.userdata["region"]')
-              #     export BOSKOS_RESOURCE_ID=$(echo ${output} | jq -r '.userdata["service-instance-id"]')
-              #     export BOSKOS_ZONE=$(echo ${output} | jq -r '.userdata["zone"]')
-              #     rm -rf output.json
-              #   else
-              #     echo "Failed to acquire resource due to invalid response, status code : ${status_code}"
-              #     exit 1
-              #   fi
+                if [[ ${status_code} == 200 && ${output} =~ "failed" ]]; then
+                  echo "Failed to acquire resource from Boskos of type ${RESOURCE_TYPE}"
+                  exit 1
+                elif [[ ${status_code} == 200 ]]; then
+                  export BOSKOS_RESOURCE_NAME=$(echo ${output} | jq -r '.name')
+                  export BOSKOS_REGION=$(echo ${output} | jq -r '.userdata["region"]')
+                  export BOSKOS_ZONE=$(echo ${output} | jq -r '.userdata["zone"]')
+                  rm -rf output.json
+                else
+                  echo "Failed to acquire resource due to invalid response, status code : ${status_code}"
+                  exit 1
+                fi
           
-              #   heartbeat_account >> "$ARTIFACTS/boskos.log" 2>&1 &
-              #   HEART_BEAT_PID=$(echo $!)
-              # fi
+                heartbeat_account >> "$ARTIFACTS/boskos.log" 2>&1 &
+                HEART_BEAT_PID=$(echo $!)
+              fi
           
               # set -o xtrace
               kubetest2 tf --vpc-node-image-name ibm-ubuntu-22-04-4-minimal-s390x-3 \
-                --vpc-region eu-de --vpc-zone eu-de-1 \
+                --vpc-region ${BOSKOS_REGION} --vpc-zone ${BOSKOS_ZONE} \
+                --vpc-name ${BOSKOS_RESOURCE_NAME} \
+                --vpc-subnet sn-20241216-01 \
                 --vpc-resource-group rZVPCcloudRG \
                 --vpc-ssh-key prabhav-loz \
                 --vpc-node-profile bz2-4x16 \
@@ -201,7 +202,7 @@ periodics:
               export KUBECONFIG="$(pwd)/config1-$TIMESTAMP/kubeconfig"
               export ARTIFACTS=$ARTIFACTS/serial_tests_artifacts
               #Run Serial Conformance tests
-              kubetest2 tf --vpc-region eu-de --vpc-zone eu-de-1 \
+              kubetest2 tf --vpc-region ${BOSKOS_REGION} --vpc-zone ${BOSKOS_ZONE} \
                 --ignore-cluster-dir true \
                 --cluster-name config1-$TIMESTAMP \
                 --down --auto-approve --ignore-destroy-errors \
@@ -216,14 +217,14 @@ periodics:
                   exit $rc2
               fi
           
-              # if [ -n "${BOSKOS_HOST:-}" ]; then
-              #   url="http://${BOSKOS_HOST}/release?name=${BOSKOS_RESOURCE_NAME}&dest=dirty&owner=${USER}"
-              #   status_code=$(curl -w '%{http_code}' -X POST ${url})
-              #   if [[ ${status_code} != 200 ]]; then
-              #     echo "Failed to release resource: ${BOSKOS_RESOURCE_NAME}"
-              #     exit 1
-              #   fi
-              # fi
+              if [ -n "${BOSKOS_HOST:-}" ]; then
+                url="http://${BOSKOS_HOST}/release?name=${BOSKOS_RESOURCE_NAME}&dest=dirty&owner=${USER}"
+                status_code=$(curl -w '%{http_code}' -X POST ${url})
+                if [[ ${status_code} != 200 ]]; then
+                  echo "Failed to release resource: ${BOSKOS_RESOURCE_NAME}"
+                  exit 1
+                fi
+              fi
   - name: periodic-kubernetes-containerd-e2e-node-tests-s390x
     labels:
       preset-ssh-bot: "true"
