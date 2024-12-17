@@ -102,8 +102,6 @@ periodics:
               set -o pipefail
               set -o xtrace
 
-              ping boskos.test-pods.svc.cluster.local
-
               export PATH=$GOPATH/bin:$PATH
               export GO111MODULE=on
           
