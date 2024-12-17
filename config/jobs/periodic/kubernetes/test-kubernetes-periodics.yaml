@@ -131,14 +131,14 @@ periodics:
               BUCKET=s390x-ci-builds
               DIRECTORY=conformance
           
-              # Build and push artifacts to IBM COS
-              REPOROOT=../../kubernetes/kubernetes
-              kubetest2 tf --build --repo-root $REPOROOT --stage cos://eu-de/$BUCKET/$DIRECTORY --cos-cred-type cos_hmac
-              K8S_BUILD_VERSION=`cat $REPOROOT/_output/release-stage/server/linux-s390x/kubernetes/version`
+              # # Build and push artifacts to IBM COS
+              # REPOROOT=../../kubernetes/kubernetes
+              # kubetest2 tf --build --repo-root $REPOROOT --stage cos://eu-de/$BUCKET/$DIRECTORY --cos-cred-type cos_hmac
+              # K8S_BUILD_VERSION=`cat $REPOROOT/_output/release-stage/server/linux-s390x/kubernetes/version`
           
+              K8S_BUILD_VERSION=v1.33.0-alpha.0.230+3ec97a445f036a
               TIMESTAMP=$(date +%s)
-              jq --arg key0 'k8s-build-version' --arg value0 $K8S_BUILD_VERSION '. | .[$key0]=$value0' <<<'{}' > $ARTIFACTS/metadata.json
-          
+              jq --arg key0 'k8s-build-version' --arg value0 $K8S_BUILD_VERSION '. | .[$key0]=$value0' <<<'{}' > $ARTIFACTS/metadata.json              
               set +o errexit
           
               heartbeat_account(){
@@ -179,6 +179,10 @@ periodics:
                 HEART_BEAT_PID=$(echo $!)
               fi
           
+              echo ${BOSKOS_REGION}
+              echo ${BOSKOS_ZONE}
+              echo ${BOSKOS_RESOURCE_NAME}
+
               # set -o xtrace
               kubetest2 tf --vpc-node-image-name ibm-ubuntu-22-04-4-minimal-s390x-3 \
                 --vpc-region ${BOSKOS_REGION} --vpc-zone ${BOSKOS_ZONE} \
