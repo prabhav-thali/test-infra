@@ -141,15 +141,6 @@ periodics:
               jq --arg key0 'k8s-build-version' --arg value0 $K8S_BUILD_VERSION '. | .[$key0]=$value0' <<<'{}' > $ARTIFACTS/metadata.json              
               set +o errexit
 
-              if [ -n "${BOSKOS_HOST:-}" ]; then
-                url="http://${BOSKOS_HOST}/release?name=${BOSKOS_RESOURCE_NAME}&dest=free&owner=${USER}"
-                status_code=$(curl -w '%{http_code}' -X POST ${url})
-                if [[ ${status_code} != 200 ]]; then
-                  echo "Failed to release resource: ${BOSKOS_RESOURCE_NAME}"
-                  exit 1
-                fi
-              fi
-
               heartbeat_account(){
                 count=0
                 url="http://${BOSKOS_HOST}/update?name=${BOSKOS_RESOURCE_NAME}&state=busy&owner=${USER}"
@@ -188,6 +179,7 @@ periodics:
                 HEART_BEAT_PID=$(echo $!)
               fi
           
+              echo "print variables"
               echo ${BOSKOS_REGION}
               echo ${BOSKOS_ZONE}
               echo ${BOSKOS_RESOURCE_NAME}
