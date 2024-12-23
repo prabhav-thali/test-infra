@@ -159,7 +159,7 @@ periodics:
               if [ -n "${BOSKOS_HOST:-}" ]; then
                 set +o xtrace
                 url="http://${BOSKOS_HOST}/acquire?type=${RESOURCE_TYPE}&state=free&dest=busy&owner=${USER}"
-                output=$(curl -X POST ${url})
+                output=$(curl -v -X POST ${url})
                 [ $? = 0 ] && status_code=200
           
                 if [[ ${status_code} == 200 && ${output} =~ "failed" ]]; then
