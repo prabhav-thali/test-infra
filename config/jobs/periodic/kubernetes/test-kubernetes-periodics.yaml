@@ -141,54 +141,52 @@ periodics:
               jq --arg key0 'k8s-build-version' --arg value0 $K8S_BUILD_VERSION '. | .[$key0]=$value0' <<<'{}' > $ARTIFACTS/metadata.json              
               set +o errexit
 
-              heartbeat_account(){
-                count=0
-                url="http://${BOSKOS_HOST}/update?name=${BOSKOS_RESOURCE_NAME}&state=busy&owner=${USER}"
-                while [ ${count} -lt 120 ]
-                do
-                  status_code=$(curl -s -o /dev/null -w '%{http_code}' -X POST ${url})
-                  if [[ ${status_code} != 200 ]]; then
-                    echo "Heart beat to resource '${BOSKOS_RESOURCE_NAME}' failed due to invalid response, status code: ${status_code}"
-                    exit 1
-                  fi
-                  count=$(( $count + 1 ))
-                  sleep 60
-                done
-              }
+              # heartbeat_account(){
+              #   count=0
+              #   url="http://${BOSKOS_HOST}/update?name=${BOSKOS_RESOURCE_NAME}&state=busy&owner=${USER}"
+              #   while [ ${count} -lt 120 ]
+              #   do
+              #     status_code=$(curl -s -o /dev/null -w '%{http_code}' -X POST ${url})
+              #     if [[ ${status_code} != 200 ]]; then
+              #       echo "Heart beat to resource '${BOSKOS_RESOURCE_NAME}' failed due to invalid response, status code: ${status_code}"
+              #       exit 1
+              #     fi
+              #     count=$(( $count + 1 ))
+              #     sleep 60
+              #   done
+              # }
           
-              if [ -n "${BOSKOS_HOST:-}" ]; then
-                set +o xtrace
-                url="http://${BOSKOS_HOST}/acquire?type=${RESOURCE_TYPE}&state=free&dest=busy&owner=${USER}"
-                output=$(curl -v -X POST ${url})
-                [ $? = 0 ] && status_code=200
+              # if [ -n "${BOSKOS_HOST:-}" ]; then
+              #   set +o xtrace
+              #   url="http://${BOSKOS_HOST}/acquire?type=${RESOURCE_TYPE}&state=free&dest=busy&owner=${USER}"
+              #   output=$(curl -v -X POST ${url})
+              #   [ $? = 0 ] && status_code=200
           
-                if [[ ${status_code} == 200 && ${output} =~ "failed" ]]; then
-                  echo "Failed to acquire resource from Boskos of type ${RESOURCE_TYPE}"
-                  exit 1
-                elif [[ ${status_code} == 200 ]]; then
-                  export BOSKOS_RESOURCE_NAME=$(echo ${output} | jq -r '.name')
-                  export BOSKOS_REGION=$(echo ${output} | jq -r '.userdata["region"]')
-                  export BOSKOS_ZONE=$(echo ${output} | jq -r '.userdata["zone"]')
-                  rm -rf output.json
-                else
-                  echo "Failed to acquire resource due to invalid response, status code : ${status_code}"
-                  exit 1
-                fi
+              #   if [[ ${status_code} == 200 && ${output} =~ "failed" ]]; then
+              #     echo "Failed to acquire resource from Boskos of type ${RESOURCE_TYPE}"
+              #     exit 1
+              #   elif [[ ${status_code} == 200 ]]; then
+              #     export BOSKOS_RESOURCE_NAME=$(echo ${output} | jq -r '.name')
+              #     export BOSKOS_REGION=$(echo ${output} | jq -r '.userdata["region"]')
+              #     export BOSKOS_ZONE=$(echo ${output} | jq -r '.userdata["zone"]')
+              #     rm -rf output.json
+              #   else
+              #     echo "Failed to acquire resource due to invalid response, status code : ${status_code}"
+              #     exit 1
+              #   fi
           
-                heartbeat_account >> "$ARTIFACTS/boskos.log" 2>&1 &
-                HEART_BEAT_PID=$(echo $!)
-              fi
+              #   heartbeat_account >> "$ARTIFACTS/boskos.log" 2>&1 &
+              #   HEART_BEAT_PID=$(echo $!)
+              # fi
           
-              echo "print variables"
-              echo ${BOSKOS_REGION}
-              echo ${BOSKOS_ZONE}
-              echo ${BOSKOS_RESOURCE_NAME}
+              # echo "print variables"
+              # echo ${BOSKOS_REGION}
+              # echo ${BOSKOS_ZONE}
+              # echo ${BOSKOS_RESOURCE_NAME}
 
               # set -o xtrace
               kubetest2 tf --vpc-node-image-name ibm-ubuntu-22-04-4-minimal-s390x-3 \
-                --vpc-region ${BOSKOS_REGION} --vpc-zone ${BOSKOS_ZONE} \
-                --vpc-name ${BOSKOS_RESOURCE_NAME} \
-                --vpc-subnet sn-20241216-01 \
+                --vpc-region eu-de --vpc-zone eu-de-1 \
                 --vpc-resource-group rZVPCcloudRG \
                 --vpc-ssh-key prabhav-loz \
                 --vpc-node-profile bz2-4x16 \
