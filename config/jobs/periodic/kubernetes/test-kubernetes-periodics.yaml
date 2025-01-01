@@ -105,7 +105,7 @@ periodics:
               export PATH=$GOPATH/bin:$PATH
               export GO111MODULE=on
           
-              make install-deployer-tf
+              make install-deployer-tf PROVIDER=vpc
               TF_LATEST="v1.9.8"
           
               RESOURCE_TYPE="vpc-service"
@@ -262,7 +262,7 @@ periodics:
               export GO111MODULE=on
 
 
-              make install-deployer-tf
+              make install-deployer-tf PROVIDER=vpc
 
               TF_LATEST="v1.9.8"
 
