@@ -208,7 +208,7 @@ presets:
       name: powercloud-bot-key
       readOnly: true
   env:
-    - name: TF_VAR_ibmcloud_api_key
+    - name: TF_VAR_vpc_api_key
       valueFrom:
         secretKeyRef:
           name: ibmcloud-iam
@@ -228,7 +228,7 @@ presets:
 - labels:
     preset-knative-powervs: "true"
   env:
-    - name: TF_VAR_ibmcloud_api_key
+    - name: TF_VAR_vpc_api_key
       valueFrom:
         secretKeyRef:
           name: knative-apikey
@@ -271,7 +271,7 @@ presets:
       name: s3-hmac-credentials
       readOnly: true
   env:
-    - name: TF_VAR_ibmcloud_api_key
+    - name: TF_VAR_vpc_api_key
       valueFrom:
         secretKeyRef:
           name: ibmcloud-iam
