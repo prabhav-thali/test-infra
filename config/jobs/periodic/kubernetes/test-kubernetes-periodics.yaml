@@ -4,7 +4,7 @@ periodics:
     labels: 
       preset-ssh-bot: "true"
     extra_refs:
-      - base_ref: s390x-deployer
+      - base_ref: add-s390x
         org: linux-on-ibm-z
         repo: kubetest2-plugins
         workdir: true
@@ -30,7 +30,7 @@ periodics:
               export GO111MODULE=on
 
 
-              make install-deployer-tf
+              make install-deployer-tf PROVIDER=vpc
 
               TF_LATEST="v1.9.8"
 
