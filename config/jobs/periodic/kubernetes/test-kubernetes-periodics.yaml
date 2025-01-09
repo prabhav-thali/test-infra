@@ -299,7 +299,7 @@ periodics:
           
               # Build and push artifacts to IBM COS
               REPOROOT=../../kubernetes/kubernetes
-              kubetest2 tf --build --target-build-arch linux/s390x --repo-root $REPOROOT --stage cos://eu-de/$BUCKET/$DIRECTORY --cos-cred-type cos_hmac
+              kubetest2 tf --provider vpc --build --target-build-arch linux/s390x --repo-root $REPOROOT --stage cos://eu-de/$BUCKET/$DIRECTORY --cos-cred-type cos_hmac
               K8S_BUILD_VERSION=`cat $REPOROOT/_output/release-stage/server/linux-s390x/kubernetes/version`
           
               K8S_BUILD_VERSION=v1.33.0-alpha.0.230+3ec97a445f036a
