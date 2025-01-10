@@ -299,7 +299,7 @@ periodics:
           
               # Build and push artifacts to IBM COS
               REPOROOT=../../kubernetes/kubernetes
-              kubetest2 tf --target-provider vpc --build --target-build-arch linux/s390x --repo-root $REPOROOT --stage cos://eu-de/$BUCKET/$DIRECTORY --cos-cred-type cos_hmac
+              kubetest2 tf --tar-provider vpc --build --target-build-arch linux/s390x --repo-root $REPOROOT --stage cos://eu-de/$BUCKET/$DIRECTORY --cos-cred-type cos_hmac
               K8S_BUILD_VERSION=`cat $REPOROOT/_output/release-stage/server/linux-s390x/kubernetes/version`
           
               K8S_BUILD_VERSION=v1.33.0-alpha.0.230+3ec97a445f036a
@@ -351,7 +351,7 @@ periodics:
               echo ${BOSKOS_RESOURCE_NAME}
 
               # set -o xtrace
-              kubetest2 tf --target-provider vpc --vpc-node-image-name ibm-ubuntu-22-04-4-minimal-s390x-3 \
+              kubetest2 tf --tar-provider vpc --vpc-node-image-name ibm-ubuntu-22-04-4-minimal-s390x-3 \
                 --vpc-region ${BOSKOS_REGION} --vpc-zone ${BOSKOS_ZONE} \
                 --vpc-resource-group rZVPCcloudRG \
                 --vpc-ssh-key prabhav-loz \
@@ -372,7 +372,7 @@ periodics:
               export KUBECONFIG="$(pwd)/config1-$TIMESTAMP/kubeconfig"
               export ARTIFACTS=$ARTIFACTS/serial_tests_artifacts
               #Run Serial Conformance tests
-              kubetest2 tf --target-provider vpc --vpc-region ${BOSKOS_REGION} --vpc-zone ${BOSKOS_ZONE} \
+              kubetest2 tf --tar-provider vpc --vpc-region ${BOSKOS_REGION} --vpc-zone ${BOSKOS_ZONE} \
                 --ignore-cluster-dir true \
                 --cluster-name config1-$TIMESTAMP \
                 --down --auto-approve --ignore-destroy-errors \
