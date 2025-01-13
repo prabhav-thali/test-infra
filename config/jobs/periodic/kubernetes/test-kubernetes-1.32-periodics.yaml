@@ -51,23 +51,22 @@ periodics:
               TIMESTAMP=$(date +%s)
 
               set +o errexit
-              kubetest2 tf --powervs-image-name CentOS-Stream-9 \
-                --powervs-region syd --powervs-zone syd05 \
-                --powervs-service-id c3f5354a-517e-4927-8523-890c4bf3d6c5 \
-                --powervs-ssh-key powercloud-bot-key \
+              kubetest2 tf --target-provider vpc --vpc-node-image-name ibm-ubuntu-22-04-4-minimal-s390x-3 \
+                --vpc-region eu-de --vpc-zone eu-de-1 \
+                --vpc-resource-group rZVPCcloudRG \
+                --vpc-ssh-key prabhav-loz \
+                --vpc-node-profile bz2-4x16 \
                 --ssh-private-key /etc/secret-volume/ssh-privatekey \
                 --cluster-name config4-$TIMESTAMP \
                 --up --set-kubeconfig=false --auto-approve \
                 --retry-on-tf-failure 3 \
-                --break-kubetest-on-upfail true --powervs-memory 32 \
-                --extra-vars=k8s_branch:release-1.32 \
+                --break-kubetest-on-upfail true \
                 --playbook k8s-ut-remote.yml
               EXTERNAL_IP=`grep -E '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' $(pwd)/config4-$TIMESTAMP/hosts`
-              kubetest2 tf --test=exec -- ssh -i /etc/secret-volume/ssh-privatekey root@$EXTERNAL_IP \
+              kubetest2 tf --target-provider vpc --test=exec -- ssh -i /etc/secret-volume/ssh-privatekey root@$EXTERNAL_IP \
                 "/make-test.sh"; \
                 rc=$?; scp -r -i /etc/secret-volume/ssh-privatekey root@$EXTERNAL_IP:/home/nonroot/artifacts $ARTIFACTS
-              kubetest2 tf --powervs-region syd --powervs-zone syd05 \
-                --powervs-service-id c3f5354a-517e-4927-8523-890c4bf3d6c5 \
+              kubetest2 tf --target-provider vpc --vpc-region eu-de --vpc-zone eu-de-1 \
                 --ignore-cluster-dir true \
                 --cluster-name config4-$TIMESTAMP \
                 --down --auto-approve --ignore-destroy-errors
@@ -147,7 +146,7 @@ periodics:
 
               # Build and push artifacts to IBM COS
               REPOROOT=../../kubernetes/kubernetes
-              kubetest2 tf --build --repo-root $REPOROOT --stage cos://us/$BUCKET/$DIRECTORY --cos-cred-type cos_hmac
+              kubetest2 tf --target-provider vpc --build --repo-root $REPOROOT --stage cos://us/$BUCKET/$DIRECTORY --cos-cred-type cos_hmac
               K8S_BUILD_VERSION=`cat $REPOROOT/_output/release-stage/server/linux-ppc64le/kubernetes/version`
 
               TIMESTAMP=$(date +%s)
@@ -196,27 +195,28 @@ periodics:
               fi
 
               set -o xtrace
-              kubetest2 tf --powervs-image-name CentOS-Stream-9 \
-                --powervs-region ${BOSKOS_REGION} --powervs-zone ${BOSKOS_ZONE} \
-                --powervs-service-id ${BOSKOS_RESOURCE_ID} \
-                --powervs-ssh-key k8s-infra-sshkey \
+              kubetest2 tf --target-provider vpc --vpc-node-image-name ibm-ubuntu-22-04-4-minimal-s390x-3 \
+                --vpc-region ${BOSKOS_REGION} --vpc-zone ${BOSKOS_ZONE} \
+                --vpc-resource-group rZVPCcloudRG \
+                --vpc-ssh-key prabhav-loz \
+                --vpc-node-profile bz2-4x16 \
                 --ssh-private-key /etc/secret-volume/ssh-privatekey \
                 --s3-server $S3_SERVER --bucket $BUCKET  --directory $DIRECTORY \
-                --extra-vars=k8s_tar_bundles:kubernetes-server-linux-ppc64le.tar.gz \
+                --extra-vars=k8s_tar_bundles:kubernetes-server-linux-s390x.tar.gz \
+                --extra-vars=pod_subnet:10.244.0.0/16 \
+                --extra-vars=cni_provider:flannel \
                 --build-version $K8S_BUILD_VERSION \
                 --release-marker $K8S_BUILD_VERSION \
                 --cluster-name config1-$TIMESTAMP \
                 --workers-count 2 \
                 --up --auto-approve --retry-on-tf-failure 3 \
                 --break-kubetest-on-upfail true \
-                --powervs-memory 32 \
                 --test=ginkgo -- --parallel 10 --use-built-binaries true --focus-regex='\[Conformance\]' --skip-regex='\[Serial\]'; rc1=$?
 
               export KUBECONFIG="$(pwd)/config1-$TIMESTAMP/kubeconfig"
               export ARTIFACTS=$ARTIFACTS/serial_tests_artifacts
               #Run Serial Conformance tests
-              kubetest2 tf --powervs-region ${BOSKOS_REGION} --powervs-zone ${BOSKOS_ZONE} \
-                --powervs-service-id ${BOSKOS_RESOURCE_ID} \
+              kubetest2 tf --target-provider vpc --vpc-region ${BOSKOS_REGION} --vpc-zone ${BOSKOS_ZONE} \
                 --ignore-cluster-dir true \
                 --cluster-name config1-$TIMESTAMP \
                 --down --auto-approve --ignore-destroy-errors \

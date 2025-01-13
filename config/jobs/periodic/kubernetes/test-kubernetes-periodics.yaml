@@ -30,7 +30,7 @@ periodics:
               export GO111MODULE=on
 
 
-              make install-deployer-tf PROVIDER=vpc
+              make install-deployer-tf
 
               TF_LATEST="v1.9.8"
 
@@ -45,7 +45,7 @@ periodics:
               TIMESTAMP=$(date +%s)
 
               set +o errexit
-              kubetest2 tf --vpc-node-image-name ibm-ubuntu-22-04-4-minimal-s390x-3 \
+              kubetest2 tf --target-provider vpc --vpc-node-image-name ibm-ubuntu-22-04-4-minimal-s390x-3 \
                 --vpc-region eu-de --vpc-zone eu-de-1 \
                 --vpc-resource-group rZVPCcloudRG \
                 --vpc-ssh-key prabhav-loz \
@@ -57,10 +57,10 @@ periodics:
                 --break-kubetest-on-upfail true \
                 --playbook k8s-ut-remote.yml
               EXTERNAL_IP=`grep -E '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' $(pwd)/config4-$TIMESTAMP/hosts`
-              kubetest2 tf --test=exec -- ssh -i /etc/secret-volume/ssh-privatekey root@$EXTERNAL_IP \
+              kubetest2 tf --target-provider vpc --test=exec -- ssh -i /etc/secret-volume/ssh-privatekey root@$EXTERNAL_IP \
                 "/make-test.sh"; \
                 rc=$?; scp -r -i /etc/secret-volume/ssh-privatekey root@$EXTERNAL_IP:/home/nonroot/artifacts $ARTIFACTS
-              kubetest2 tf --vpc-region eu-de --vpc-zone eu-de-1 \
+              kubetest2 tf --target-provider vpc --vpc-region eu-de --vpc-zone eu-de-1 \
                 --ignore-cluster-dir true \
                 --cluster-name config4-$TIMESTAMP \
                 --down --auto-approve --ignore-destroy-errors
@@ -105,7 +105,7 @@ periodics:
               export PATH=$GOPATH/bin:$PATH
               export GO111MODULE=on
           
-              make install-deployer-tf PROVIDER=vpc
+              make install-deployer-tf
               TF_LATEST="v1.9.8"
           
               RESOURCE_TYPE="vpc-service"
@@ -133,7 +133,7 @@ periodics:
           
               # Build and push artifacts to IBM COS
               REPOROOT=../../kubernetes/kubernetes
-              kubetest2 tf --build --target-build-arch linux/s390x --repo-root $REPOROOT --stage cos://eu-de/$BUCKET/$DIRECTORY --cos-cred-type cos_hmac
+              kubetest2 tf --target-provider vpc --build --target-build-arch linux/s390x --repo-root $REPOROOT --stage cos://eu-de/$BUCKET/$DIRECTORY --cos-cred-type cos_hmac
               K8S_BUILD_VERSION=`cat $REPOROOT/_output/release-stage/server/linux-s390x/kubernetes/version`
           
               K8S_BUILD_VERSION=v1.33.0-alpha.0.230+3ec97a445f036a
@@ -185,7 +185,7 @@ periodics:
               echo ${BOSKOS_RESOURCE_NAME}
 
               # set -o xtrace
-              kubetest2 tf --vpc-node-image-name ibm-ubuntu-22-04-4-minimal-s390x-3 \
+              kubetest2 tf --target-provider vpc --vpc-node-image-name ibm-ubuntu-22-04-4-minimal-s390x-3 \
                 --vpc-region ${BOSKOS_REGION} --vpc-zone ${BOSKOS_ZONE} \
                 --vpc-name ${BOSKOS_RESOURCE_NAME} \
                 --vpc-subnet ${BOSKOS_RESOURCE_NAME}-subnet \
@@ -208,7 +208,7 @@ periodics:
               export KUBECONFIG="$(pwd)/config1-$TIMESTAMP/kubeconfig"
               export ARTIFACTS=$ARTIFACTS/serial_tests_artifacts
               #Run Serial Conformance tests
-              kubetest2 tf --vpc-region ${BOSKOS_REGION} --vpc-zone ${BOSKOS_ZONE} \
+              kubetest2 tf --target-provider vpc --vpc-region ${BOSKOS_REGION} --vpc-zone ${BOSKOS_ZONE} \
                 --ignore-cluster-dir true \
                 --cluster-name config1-$TIMESTAMP \
                 --down --auto-approve --ignore-destroy-errors \
@@ -271,7 +271,7 @@ periodics:
               export PATH=$GOPATH/bin:$PATH
               export GO111MODULE=on
           
-              make install-deployer-tf PROVIDER=vpc
+              make install-deployer-tf
               TF_LATEST="v1.9.8"
           
               RESOURCE_TYPE="vpc-service"
@@ -427,7 +427,7 @@ periodics:
               export GO111MODULE=on
 
 
-              make install-deployer-tf PROVIDER=vpc
+              make install-deployer-tf
 
               TF_LATEST="v1.9.8"
 
@@ -448,7 +448,7 @@ periodics:
               chmod +x /usr/local/bin/kubectl
 
               set +o errexit
-              kubetest2 tf --vpc-node-image-name ibm-ubuntu-22-04-4-minimal-s390x-3 \
+              kubetest2 tf --target-provider vpc --vpc-node-image-name ibm-ubuntu-22-04-4-minimal-s390x-3 \
                 --vpc-region eu-de --vpc-zone eu-de-1 \
                 --vpc-resource-group rZVPCcloudRG \
                 --vpc-ssh-key prabhav-loz \
@@ -460,10 +460,10 @@ periodics:
                 --break-kubetest-on-upfail true \
                 --playbook k8s-node-remote.yml
               EXTERNAL_IP=`grep -E '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' $(pwd)/config3-$TIMESTAMP/hosts`
-              kubetest2 tf --test=exec -- ssh -i /etc/secret-volume/ssh-privatekey root@$EXTERNAL_IP \
+              kubetest2 tf --target-provider vpc --test=exec -- ssh -i /etc/secret-volume/ssh-privatekey root@$EXTERNAL_IP \
                 "export SKIP='\[Flaky\]|\[Slow\]|\[Serial\]|Containers.Lifecycle.should|should.execute.readiness.probe.while.in.preStop' && /make-test-e2e-node.sh"; \
                 rc=$?; scp -r -i /etc/secret-volume/ssh-privatekey root@$EXTERNAL_IP:/tmp/_artifacts $ARTIFACTS
-              kubetest2 tf --vpc-region eu-de --vpc-zone eu-de-1 \
+              kubetest2 tf --target-provider vpc --vpc-region eu-de --vpc-zone eu-de-1 \
                 --ignore-cluster-dir true \
                 --cluster-name config3-$TIMESTAMP \
                 --down --auto-approve --ignore-destroy-errors
