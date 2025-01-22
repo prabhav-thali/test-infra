@@ -4,7 +4,7 @@ periodics:
     labels: 
       preset-ssh-bot: "true"
     extra_refs:
-      - base_ref: add-s390x
+      - base_ref: add-s390x-prov
         org: linux-on-ibm-z
         repo: kubetest2-plugins
         workdir: true
@@ -71,7 +71,7 @@ periodics:
       preset-ibmcloud-cred: "true"
     cron: "0 2/3 * * *"
     extra_refs:
-      - base_ref: add-s390x
+      - base_ref: add-s390x-prov
         org: linux-on-ibm-z
         repo: kubetest2-plugins
         workdir: true
@@ -136,7 +136,6 @@ periodics:
               kubetest2 tf --target-provider vpc --build --target-build-arch linux/s390x --repo-root $REPOROOT --stage cos://eu-de/$BUCKET/$DIRECTORY --cos-cred-type cos_hmac
               K8S_BUILD_VERSION=`cat $REPOROOT/_output/release-stage/server/linux-s390x/kubernetes/version`
           
-              K8S_BUILD_VERSION=v1.33.0-alpha.0.230+3ec97a445f036a
               TIMESTAMP=$(date +%s)
               jq --arg key0 'k8s-build-version' --arg value0 $K8S_BUILD_VERSION '. | .[$key0]=$value0' <<<'{}' > $ARTIFACTS/metadata.json              
               set +o errexit
@@ -302,7 +301,6 @@ periodics:
               kubetest2 tf --target-provider vpc --build --target-build-arch linux/s390x --repo-root $REPOROOT --stage cos://eu-de/$BUCKET/$DIRECTORY --cos-cred-type cos_hmac
               K8S_BUILD_VERSION=`cat $REPOROOT/_output/release-stage/server/linux-s390x/kubernetes/version`
           
-              K8S_BUILD_VERSION=v1.33.0-alpha.0.230+3ec97a445f036a
               TIMESTAMP=$(date +%s)
               jq --arg key0 'k8s-build-version' --arg value0 $K8S_BUILD_VERSION '. | .[$key0]=$value0' <<<'{}' > $ARTIFACTS/metadata.json              
               set +o errexit
