@@ -4,7 +4,7 @@ periodics:
     labels: 
       preset-ssh-bot: "true"
     extra_refs:
-      - base_ref: add-s390x-prov
+      - base_ref: test-old
         org: linux-on-ibm-z
         repo: kubetest2-plugins
         workdir: true
@@ -47,7 +47,6 @@ periodics:
               set +o errexit
               kubetest2 tf --target-provider vpc --vpc-node-image-name ibm-ubuntu-22-04-4-minimal-s390x-3 \
                 --vpc-region eu-de --vpc-zone eu-de-1 \
-                --vpc-name vpc-unit-tests \
                 --vpc-resource-group rZVPCcloudRG \
                 --vpc-ssh-key prabhav-loz \
                 --vpc-node-profile bz2-4x16 \
