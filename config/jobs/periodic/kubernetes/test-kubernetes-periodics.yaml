@@ -71,7 +71,7 @@ periodics:
       preset-ibmcloud-cred: "true"
     cron: "0 2/3 * * *"
     extra_refs:
-      - base_ref: add-s390x-prov
+      - base_ref: test-old
         org: linux-on-ibm-z
         repo: kubetest2-plugins
         workdir: true
