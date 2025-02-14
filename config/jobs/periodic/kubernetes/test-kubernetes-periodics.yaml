@@ -47,7 +47,7 @@ periodics:
               kubetest2 tf --target-provider vpc --vpc-node-image-name ibm-ubuntu-22-04-4-minimal-s390x-3 \
                 --vpc-region eu-de --vpc-zone eu-de-1 \
                 --vpc-name unit-tests-vpc \
-                --vpc-resource-group rZVPCcloudRG \
+                --vpc-resource-group rg-unit-test \
                 --vpc-ssh-key prabhav-loz \
                 --vpc-node-profile bz2-4x16 \
                 --ssh-private-key /etc/secret-volume/ssh-privatekey \
@@ -129,7 +129,7 @@ periodics:
           
               # Details of IBM S3 storage
               S3_SERVER=s3.eu-de.cloud-object-storage.appdomain.cloud
-              BUCKET=s390x-ci-builds
+              BUCKET=k8s-infra-z-cos-bucket
               DIRECTORY=conformance
           
               # Build and push artifacts to IBM COS
@@ -188,7 +188,7 @@ periodics:
               kubetest2 tf --target-provider vpc --vpc-node-image-name ibm-ubuntu-22-04-4-minimal-s390x-3 \
                 --vpc-region ${BOSKOS_REGION} --vpc-zone ${BOSKOS_ZONE} \
                 --vpc-name ${BOSKOS_RESOURCE_NAME} \
-                --vpc-resource-group rZVPCcloudRG \
+                --vpc-resource-group rg-conformance-test \
                 --vpc-ssh-key prabhav-loz \
                 --vpc-node-profile bz2-4x16 \
                 --ssh-private-key /etc/secret-volume/ssh-privatekey \
@@ -286,7 +286,7 @@ periodics:
               kubetest2 tf --target-provider vpc --vpc-node-image-name ibm-ubuntu-22-04-4-minimal-s390x-3 \
                 --vpc-name node-e2e-tests-vpc \
                 --vpc-region eu-de --vpc-zone eu-de-1 \
-                --vpc-resource-group rZVPCcloudRG \
+                --vpc-resource-group rg-e2e-test \
                 --vpc-ssh-key prabhav-loz \
                 --vpc-node-profile bz2-4x16 \
                 --ssh-private-key /etc/secret-volume/ssh-privatekey \
