@@ -189,7 +189,7 @@ periodics:
                 --vpc-region ${BOSKOS_REGION} --vpc-zone ${BOSKOS_ZONE} \
                 --vpc-name ${BOSKOS_RESOURCE_NAME} \
                 --vpc-resource-group rg-conformance-test \
-                --vpc-ssh-key prabhav-loz \
+                --vpc-ssh-key k8s-conformance-tests \
                 --vpc-node-profile bz2-4x16 \
                 --ssh-private-key /etc/secret-volume/ssh-privatekey \
                 --s3-server $S3_SERVER --bucket $BUCKET  --directory $DIRECTORY \
@@ -233,7 +233,7 @@ periodics:
 
   - name: periodic-kubernetes-containerd-e2e-node-tests-s390x
     labels:
-      preset-ssh-bot: "true"
+      preset-e2e-test: "true"
       timeout: 2h
     cron: "0 1/1 * * *"
     extra_refs:
@@ -287,7 +287,7 @@ periodics:
                 --vpc-name node-e2e-tests-vpc \
                 --vpc-region eu-de --vpc-zone eu-de-1 \
                 --vpc-resource-group rg-e2e-test \
-                --vpc-ssh-key prabhav-loz \
+                --vpc-ssh-key k8s-e2e-test \
                 --vpc-node-profile bz2-4x16 \
                 --ssh-private-key /etc/secret-volume/ssh-privatekey \
                 --cluster-name config3-$TIMESTAMP \
