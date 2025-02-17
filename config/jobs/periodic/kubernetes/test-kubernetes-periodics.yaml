@@ -50,7 +50,7 @@ periodics:
                 --vpc-resource-group rg-unit-test \
                 --vpc-ssh-key k8s-unit-test \
                 --vpc-node-profile bz2-4x16 \
-                --ssh-private-key /etc/secret-volume/ssh-privatekey-unit \
+                --ssh-private-key /etc/secret-volume/ssh-privatekey \
                 --cluster-name config4-$TIMESTAMP \
                 --up --set-kubeconfig=false --auto-approve \
                 --retry-on-tf-failure 3 \
