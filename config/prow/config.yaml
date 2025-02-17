@@ -218,6 +218,24 @@ presets:
       secret:
         defaultMode: 256
         secretName: powercloud-bot-new-key
+# Unit tests s390x
+- labels:
+    preset-unit-test: "true"
+  volumeMounts:
+    - mountPath: /etc/secret-volume
+      name: powercloud-bot-key
+      readOnly: true
+  env:
+    - name: TF_VAR_vpc_api_key
+      valueFrom:
+        secretKeyRef:
+          name: ibmcloud-iam-kubeonz
+          key: key
+  volumes:
+    - name: powercloud-bot-key
+      secret:
+        defaultMode: 256
+        secretName: k8s-unit-test-key
 # Building Golang binaries
 - labels:
     preset-golang-build: "true"
