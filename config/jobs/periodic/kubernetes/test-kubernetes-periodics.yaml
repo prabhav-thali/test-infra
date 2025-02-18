@@ -189,7 +189,7 @@ periodics:
                 --vpc-region ${BOSKOS_REGION} --vpc-zone ${BOSKOS_ZONE} \
                 --vpc-name ${BOSKOS_RESOURCE_NAME} \
                 --vpc-resource-group rg-conformance-test \
-                --vpc-ssh-key k8s-conformance-tests \
+                --vpc-ssh-key k8s-infra-ssh-key \
                 --vpc-node-profile bz2-4x16 \
                 --ssh-private-key /etc/secret-volume/ssh-privatekey \
                 --s3-server $S3_SERVER --bucket $BUCKET  --directory $DIRECTORY \
