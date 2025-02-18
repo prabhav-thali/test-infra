@@ -237,7 +237,7 @@ periodics:
       timeout: 2h
     cron: "0 1/1 * * *"
     extra_refs:
-      - base_ref: s390x-deployer
+      - base_ref: add-s390x-prov
         org: linux-on-ibm-z
         repo: kubetest2-plugins
         workdir: true
