@@ -129,7 +129,7 @@ periodics:
           
               # Details of IBM S3 storage
               S3_SERVER=s3.eu-de.cloud-object-storage.appdomain.cloud
-              BUCKET=k8s-infra-z-cos-bucket
+              BUCKET=k8s-infra-z-eu-cos-bucket
               DIRECTORY=conformance
           
               # Build and push artifacts to IBM COS
