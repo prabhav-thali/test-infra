@@ -76,8 +76,8 @@ periodics:
         org: linux-on-ibm-z
         repo: kubetest2-plugins
         workdir: true
-      - base_ref: master
-        org: kubernetes
+      - base_ref: master-1.24.1
+        org: prabhav-thali
         repo: kubernetes
     spec:
       containers:
