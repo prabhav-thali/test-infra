@@ -133,7 +133,7 @@ periodics:
               DIRECTORY=conformance
           
               # Build and push artifacts to IBM COS
-              REPOROOT=../../kubernetes/kubernetes
+              REPOROOT=../../prabhav-thali/kubernetes
               kubetest2 tf --target-provider vpc --build --target-build-arch linux/s390x --repo-root $REPOROOT --stage cos://eu/$BUCKET/$DIRECTORY --cos-cred-type cos_hmac
               K8S_BUILD_VERSION=`cat $REPOROOT/_output/release-stage/server/linux-s390x/kubernetes/version`
           
