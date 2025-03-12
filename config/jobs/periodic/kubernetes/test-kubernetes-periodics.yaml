@@ -106,6 +106,8 @@ periodics:
               export PATH=$GOPATH/bin:$PATH
               export GO111MODULE=on
           
+              go version
+
               make install-deployer-tf
               TF_LATEST="v1.9.8"
           
