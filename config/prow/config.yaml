@@ -89,7 +89,7 @@ tide:
   sync_period: 2m
   queries:
     - orgs:
-        - ppc64le-cloud
+        - linux-on-ibm-z
         - ocp-power-automation
         - PDeXchange
       labels:
@@ -208,16 +208,52 @@ presets:
       name: powercloud-bot-key
       readOnly: true
   env:
-    - name: TF_VAR_powervs_api_key
+    - name: TF_VAR_vpc_api_key
       valueFrom:
         secretKeyRef:
-          name: ibm-cloud-credentials
-          key: TF_VAR_powervs_api_key
+          name: ibmcloud-iam-kubeonz
+          key: key
   volumes:
     - name: powercloud-bot-key
       secret:
         defaultMode: 256
-        secretName: bot-ssh-secret
+        secretName: powercloud-bot-new-key
+# Unit tests s390x
+- labels:
+    preset-unit-test: "true"
+  volumeMounts:
+    - mountPath: /etc/secret-volume
+      name: powercloud-bot-key
+      readOnly: true
+  env:
+    - name: TF_VAR_vpc_api_key
+      valueFrom:
+        secretKeyRef:
+          name: ibmcloud-iam-kubeonz
+          key: key
+  volumes:
+    - name: powercloud-bot-key
+      secret:
+        defaultMode: 256
+        secretName: k8s-unit-test-key
+# e2e tests s390x
+- labels:
+    preset-e2e-test: "true"
+  volumeMounts:
+    - mountPath: /etc/secret-volume
+      name: powercloud-bot-key
+      readOnly: true
+  env:
+    - name: TF_VAR_vpc_api_key
+      valueFrom:
+        secretKeyRef:
+          name: ibmcloud-iam-kubeonz
+          key: key
+  volumes:
+    - name: powercloud-bot-key
+      secret:
+        defaultMode: 256
+        secretName: k8s-e2e-test-key
 # Building Golang binaries
 - labels:
     preset-golang-build: "true"
@@ -228,15 +264,17 @@ presets:
 - labels:
     preset-knative-powervs: "true"
   env:
-    - name: TF_VAR_powervs_api_key
+    - name: TF_VAR_vpc_api_key
       valueFrom:
         secretKeyRef:
           name: knative-apikey
           key: apikey
     - name: KO_FLAGS
-      value: --platform=linux/ppc64le
+      value: --platform=linux/s390x
     - name: PLATFORM
-      value: linux/ppc64le
+      value: linux/s390x
+    - name: INGRESS_CLASS
+      value: contour.ingress.networking.knative.dev
     - name: KO_DOCKER_REPO
       value: icr.io/upstream-k8s-registry/knative
     - name: DOCKER_CONFIG
@@ -244,7 +282,7 @@ presets:
 
   volumeMounts:
     - name: ssh-key
-      mountPath: /root/.ssh/
+      mountPath: /root/.ssh/vpc
       readOnly: true
     - name: config-json
       mountPath: /root/.docker/
@@ -263,23 +301,23 @@ presets:
     preset-ibmcloud-cred: "true"
   volumeMounts:
     - mountPath: /etc/secret-volume
-      name: k8s-infra-ssh-key
+      name: k8s-vpc-ssh-key
       readOnly: true
     - mountPath: /root/.ibmcloud
       name: s3-hmac-credentials
       readOnly: true
   env:
-    - name: TF_VAR_powervs_api_key
+    - name: TF_VAR_vpc_api_key
       valueFrom:
         secretKeyRef:
-          name: ibmcloud-iam
+          name: ibmcloud-iam-kubeonz
           key: key
   volumes:
-    - name: k8s-infra-ssh-key
+    - name: k8s-vpc-ssh-key
       secret:
         defaultMode: 256
-        secretName: k8s-infra-ssh-key
+        secretName: k8s-vpc-ssh-key
     - name: s3-hmac-credentials
       secret:
         defaultMode: 256
-        secretName: s3-hmac-credentials
+        secretName: s3-hmac-credentials-z
