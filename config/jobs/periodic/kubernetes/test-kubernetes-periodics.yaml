@@ -130,7 +130,7 @@ periodics:
               apt-get update && apt-get install -y ansible
           
               # Details of IBM S3 storage
-              S3_SERVER=s3.eu.cloud-object-storage.appdomain.cloud
+              S3_SERVER=s3.eu-de.cloud-object-storage.appdomain.cloud
               BUCKET=s390x-ci-builds
               DIRECTORY=conformance
           
