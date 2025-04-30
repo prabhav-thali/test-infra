@@ -301,7 +301,7 @@ presets:
     preset-ibmcloud-cred: "true"
   volumeMounts:
     - mountPath: /etc/secret-volume
-      name: k8s-vpc-ssh-key
+      name: k8s-infra-ssh-key
       readOnly: true
     - mountPath: /root/.ibmcloud
       name: s3-hmac-credentials
@@ -310,14 +310,14 @@ presets:
     - name: TF_VAR_vpc_api_key
       valueFrom:
         secretKeyRef:
-          name: ibmcloud-iam-kubeonz
+          name: ibmcloud-iam
           key: key
   volumes:
-    - name: k8s-vpc-ssh-key
+    - name: k8s-infra-ssh-key
       secret:
         defaultMode: 256
-        secretName: k8s-vpc-ssh-key
+        secretName: k8s-infra-ssh-key
     - name: s3-hmac-credentials
       secret:
         defaultMode: 256
-        secretName: s3-hmac-credentials-z
+        secretName: s3-hmac-credentials

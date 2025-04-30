@@ -76,8 +76,8 @@ periodics:
         org: linux-on-ibm-z
         repo: kubetest2-plugins
         workdir: true
-      - base_ref: master-1.24.1
-        org: prabhav-thali
+      - base_ref: master
+        org: kubernetes
         repo: kubernetes
     spec:
       containers:
@@ -131,11 +131,11 @@ periodics:
           
               # Details of IBM S3 storage
               S3_SERVER=s3.eu.cloud-object-storage.appdomain.cloud
-              BUCKET=k8s-infra-z-eu-cos-bucket
+              BUCKET=s390x-ci-builds
               DIRECTORY=conformance
           
               # Build and push artifacts to IBM COS
-              REPOROOT=../../prabhav-thali/kubernetes
+              REPOROOT=../../kubernetes/kubernetes
               kubetest2 tf --target-provider vpc --build --target-build-arch linux/s390x --repo-root $REPOROOT --stage cos://eu/$BUCKET/$DIRECTORY --cos-cred-type cos_hmac
               K8S_BUILD_VERSION=`cat $REPOROOT/_output/release-stage/server/linux-s390x/kubernetes/version`
           
@@ -190,8 +190,8 @@ periodics:
               kubetest2 tf --target-provider vpc --vpc-node-image-name ibm-ubuntu-22-04-4-minimal-s390x-3 \
                 --vpc-region ${BOSKOS_REGION} --vpc-zone ${BOSKOS_ZONE} \
                 --vpc-name ${BOSKOS_RESOURCE_NAME} \
-                --vpc-resource-group rg-conformance-test \
-                --vpc-ssh-key k8s-infra-ssh-key \
+                --vpc-resource-group rZVPCcloudRG \
+                --vpc-ssh-key prabhav-loz \
                 --vpc-node-profile bz2-4x16 \
                 --ssh-private-key /etc/secret-volume/ssh-privatekey \
                 --s3-server $S3_SERVER --bucket $BUCKET  --directory $DIRECTORY \
