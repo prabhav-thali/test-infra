@@ -320,4 +320,4 @@ presets:
     - name: s3-hmac-credentials
       secret:
         defaultMode: 256
-        secretName: s3-hmac-credentials-z
+        secretName: s3-hmac-credentials
