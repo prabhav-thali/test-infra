@@ -23,11 +23,11 @@ periodics:
             allowPrivilegeEscalation: false
           resources:
             requests:
-              cpu: 6
-              memory: "28Gi"
+              cpu: 3
+              memory: "12Gi"
             limits:
-              cpu: 6
-              memory: "28Gi"
+              cpu: 3
+              memory: "12Gi"
 
   - name: periodic-kubernetes-unit-test-s390x
     cron: "0 1/3 * * *"
