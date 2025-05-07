@@ -1,4 +1,34 @@
 periodics:
+  - name: ci-kubernetes-unit-s390x
+    interval: 1h
+    decorate: true
+    extra_refs:
+      - org: kubernetes
+        repo: kubernetes
+        base_ref: master
+        path_alias: k8s.io/kubernetes
+    spec:
+      # unit tests have no business requiring root or doing privileged operations
+      securityContext:
+        # NOTE: these are arbitrary non-root values. They don't exist in the
+        # image and don't need to, the unit tests should only write to TMPDIR
+        runAsGroup: 2010
+        runAsUser: 2001
+      containers:
+        - image: quay.io/prabhavthali/kubekins-e2e-v2:v20250506
+          command:
+            - make
+            - test
+          securityContext:
+            allowPrivilegeEscalation: false
+          resources:
+            requests:
+              cpu: 6
+              memory: "28Gi"
+            limits:
+              cpu: 6
+              memory: "28Gi"
+
   - name: periodic-kubernetes-unit-test-s390x
     cron: "0 1/3 * * *"
     labels: 
