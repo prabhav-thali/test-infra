@@ -283,10 +283,10 @@ periodics:
               value: "ci-kubernetes-s390x-conformance-latest-kubetest2"
           resources:
             requests:
-              cpu: 4
+              cpu: 3
               memory: "14Gi"
             limits:
-              cpu: 4
+              cpu: 3
               memory: "14Gi"
           command:
             - runner.sh
@@ -394,7 +394,7 @@ periodics:
                   exit 1
                 fi
               fi
-              
+
               if [ $rc1 != 0 ]; then
                   echo "ERROR: Non Serial k8s Conformance tests exited with code: $rc1"
                   exit $rc1
