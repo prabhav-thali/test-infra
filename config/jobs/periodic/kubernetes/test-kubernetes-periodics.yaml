@@ -273,7 +273,7 @@ periodics:
       description: Runs conformance tests using kubetest2 against kubernetes ci latest on IBM VPC
     spec:
       containers:
-        - image: quay.io/prabhavthali/kubekins-e2e-v2:20250508
+        - image: quay.io/prabhavthali/kubekins-e2e-v2:20250508-v2
           securityContext:
             privileged: true
           env:
@@ -302,6 +302,7 @@ periodics:
               export PATH=$GOPATH/bin:$PATH
               export GO111MODULE=on
               RESOURCE_TYPE="vpc-service"
+              kubetest2 --version
               #Call to boskos to checkout resource
               heartbeat_account(){
                 count=0
