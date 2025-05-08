@@ -273,7 +273,7 @@ periodics:
       description: Runs conformance tests using kubetest2 against kubernetes ci latest on IBM VPC
     spec:
       containers:
-        - image: quay.io/prabhavthali/kubekins-e2e-v2:v20250506
+        - image: quay.io/prabhavthali/kubekins-e2e-v2:20250508
           securityContext:
             privileged: true
           env:
