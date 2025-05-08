@@ -303,9 +303,9 @@ presets:
     - mountPath: /etc/secret-volume
       name: k8s-infra-ssh-key
       readOnly: true
-    - mountPath: /root/.ibmcloud
-      name: s3-hmac-credentials
-      readOnly: true
+    # - mountPath: /root/.ibmcloud
+    #   name: s3-hmac-credentials
+    #   readOnly: true
   env:
     - name: TF_VAR_vpc_api_key
       valueFrom:
@@ -317,7 +317,7 @@ presets:
       secret:
         defaultMode: 256
         secretName: k8s-infra-ssh-key
-    - name: s3-hmac-credentials
-      secret:
-        defaultMode: 256
-        secretName: s3-hmac-credentials
+    # - name: s3-hmac-credentials
+    #   secret:
+    #     defaultMode: 256
+    #     secretName: s3-hmac-credentials
