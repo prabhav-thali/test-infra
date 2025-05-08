@@ -321,3 +321,7 @@ presets:
     #   secret:
     #     defaultMode: 256
     #     secretName: s3-hmac-credentials
+# enable GOPROXY by default
+- env:
+  - name: GOPROXY
+    value: "https://proxy.golang.org"
