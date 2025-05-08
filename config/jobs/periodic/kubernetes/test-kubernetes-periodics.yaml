@@ -330,7 +330,7 @@ periodics:
                 elif [[ ${status_code} == 200 ]]; then
                   export BOSKOS_RESOURCE_NAME=$(echo ${output} | jq -r '.name')
                   export BOSKOS_REGION=$(echo ${output} | jq -r '.userdata["region"]')
-                  export BOSKOS_ZONE=$(echo ${output} | jq -r '.userdata["zone"]')
+                  export BOSKOS_RG=$(echo ${output} | jq -r '.userdata["resource-group"]')
                   rm -rf output.json
                 else
                   echo "Failed to acquire resource due to invalid response, status code : ${status_code}"
@@ -360,7 +360,7 @@ periodics:
               kubetest2 tf --target-provider vpc --vpc-node-image-name ibm-ubuntu-22-04-4-minimal-s390x-3 \
                 --vpc-region ${BOSKOS_REGION} --vpc-zone eu-de-1 \
                 --vpc-name ${BOSKOS_RESOURCE_NAME} \
-                --vpc-resource-group rZVPCcloudRG \
+                --vpc-resource-group ${BOSKOS_RG} \
                 --vpc-ssh-key prabhav-loz \
                 --vpc-node-profile bz2-4x16 \
                 --ssh-private-key /etc/secret-volume/ssh-privatekey \
