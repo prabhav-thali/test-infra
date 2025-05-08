@@ -265,9 +265,9 @@ periodics:
     decoration_config:
       timeout: 220m
     extra_refs:
-      - base_ref: add-s390x-prov
+      - base_ref: vpc-s390x
         org: linux-on-ibm-z
-        repo: kubetest2-plugins
+        repo: provider-ibmcloud-test-infra
         workdir: true
     annotations:
       description: Runs conformance tests using kubetest2 against kubernetes ci latest on IBM VPC
@@ -317,13 +317,13 @@ periodics:
                   sleep 60
                 done
               }
-          
+
               if [ -n "${BOSKOS_HOST:-}" ]; then
                 set +o xtrace
                 url="http://${BOSKOS_HOST}/acquire?type=${RESOURCE_TYPE}&state=free&dest=busy&owner=${USER}"
                 output=$(curl -v -X POST ${url})
                 [ $? = 0 ] && status_code=200
-          
+
                 if [[ ${status_code} == 200 && ${output} =~ "failed" ]]; then
                   echo "Failed to acquire resource from Boskos of type ${RESOURCE_TYPE}"
                   exit 1
@@ -336,13 +336,14 @@ periodics:
                   echo "Failed to acquire resource due to invalid response, status code : ${status_code}"
                   exit 1
                 fi
-          
+
                 heartbeat_account >> "$ARTIFACTS/boskos.log" 2>&1 &
                 HEART_BEAT_PID=$(echo $!)
               fi
-          
+
               echo "Resource Name:"
               echo ${BOSKOS_RESOURCE_NAME}
+              echo ${BOSKOS_RG}
 
               #Setup of kubetest2 tf deployer and ginkgo tester
               make install-deployer-tf
