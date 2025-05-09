@@ -332,6 +332,7 @@ periodics:
                   export BOSKOS_RESOURCE_NAME=$(echo ${output} | jq -r '.name')
                   export BOSKOS_REGION=$(echo ${output} | jq -r '.userdata["region"]')
                   export BOSKOS_RG=$(echo ${output} | jq -r '.userdata["resource-group"]')
+                  export BOSKOS_ZONE=$(echo ${output} | jq -r '.userdata["zone"]')
                   rm -rf output.json
                 else
                   echo "Failed to acquire resource due to invalid response, status code : ${status_code}"
@@ -345,6 +346,7 @@ periodics:
               echo "Resource Name:"
               echo ${BOSKOS_RESOURCE_NAME}
               echo ${BOSKOS_RG}
+              echo ${BOSKOS_ZONE}
 
               #Setup of kubetest2 tf deployer and ginkgo tester
               make install-deployer-tf
@@ -360,7 +362,7 @@ periodics:
               set +o errexit
               set -o xtrace
               kubetest2 tf --target-provider vpc --vpc-node-image-name ibm-ubuntu-22-04-4-minimal-s390x-3 \
-                --vpc-region ${BOSKOS_REGION} --vpc-zone eu-de-1 \
+                --vpc-region ${BOSKOS_REGION} --vpc-zone ${BOSKOS_REGION} \
                 --vpc-name ${BOSKOS_RESOURCE_NAME} \
                 --vpc-resource-group ${BOSKOS_RG} \
                 --vpc-ssh-key prabhav-loz \
@@ -380,7 +382,7 @@ periodics:
               export KUBECONFIG="$(pwd)/config1-$TIMESTAMP/kubeconfig"
               export ARTIFACTS=$ARTIFACTS/serial_tests_artifacts
               #Run Serial Conformance tests
-              kubetest2 tf --target-provider vpc --vpc-region ${BOSKOS_REGION} --vpc-zone eu-de-1 \
+              kubetest2 tf --target-provider vpc --vpc-region ${BOSKOS_REGION} --vpc-zone ${BOSKOS_REGION} \
                 --ignore-cluster-dir true \
                 --cluster-name config1-$TIMESTAMP \
                 --down --auto-approve --ignore-destroy-errors \
