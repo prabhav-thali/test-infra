@@ -265,7 +265,7 @@ periodics:
     decoration_config:
       timeout: 220m
     extra_refs:
-      - base_ref: vpc-s390x
+      - base_ref: vpc-s390x-test
         org: linux-on-ibm-z
         repo: provider-ibmcloud-test-infra
         workdir: true
