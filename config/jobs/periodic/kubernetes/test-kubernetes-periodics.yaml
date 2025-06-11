@@ -68,7 +68,6 @@ periodics:
               export PATH=$GOPATH/bin:$PATH
               export GO111MODULE=on
               RESOURCE_TYPE="vpc-service"
-              kubetest2 --version
               #Call to boskos to checkout resource
               heartbeat_account(){
                 count=0
@@ -97,7 +96,7 @@ periodics:
                 elif [[ ${status_code} == 200 ]]; then
                   export BOSKOS_RESOURCE_NAME=$(echo ${output} | jq -r '.name')
                   export BOSKOS_REGION=$(echo ${output} | jq -r '.userdata["region"]')
-                  export BOSKOS_RG=$(echo ${output} | jq -r '.userdata["resource-group"]')
+                  export BOSKOS_RESOURCE_GROUP=$(echo ${output} | jq -r '.userdata["resource-group-name"]')
                   export BOSKOS_ZONE=$(echo ${output} | jq -r '.userdata["zone"]')
                   rm -rf output.json
                 else
@@ -111,7 +110,7 @@ periodics:
 
               echo "Resource Name:"
               echo ${BOSKOS_RESOURCE_NAME}
-              echo ${BOSKOS_RG}
+              echo ${BOSKOS_RESOURCE_GROUP}
               echo ${BOSKOS_ZONE}
 
               #Setup of kubetest2 tf deployer and ginkgo tester
@@ -130,7 +129,7 @@ periodics:
               kubetest2 tf --target-provider vpc --vpc-node-image-name ibm-ubuntu-22-04-4-minimal-s390x-3 \
                 --vpc-region ${BOSKOS_REGION} --vpc-zone ${BOSKOS_ZONE} \
                 --vpc-name ${BOSKOS_RESOURCE_NAME} \
-                --vpc-resource-group rZVPCcloudRG \
+                --vpc-resource-group BOSKOS_RESOURCE_GROUP \
                 --vpc-ssh-key prabhav-loz \
                 --vpc-node-profile bz2-4x16 \
                 --ssh-private-key /etc/secret-volume/ssh-privatekey \
