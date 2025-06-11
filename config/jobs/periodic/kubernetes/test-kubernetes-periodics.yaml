@@ -129,7 +129,7 @@ periodics:
               kubetest2 tf --target-provider vpc --vpc-node-image-name ibm-ubuntu-22-04-4-minimal-s390x-3 \
                 --vpc-region ${BOSKOS_REGION} --vpc-zone ${BOSKOS_ZONE} \
                 --vpc-name ${BOSKOS_RESOURCE_NAME} \
-                --vpc-resource-group BOSKOS_RESOURCE_GROUP \
+                --vpc-resource-group ${BOSKOS_RESOURCE_GROUP} \
                 --vpc-ssh-key prabhav-loz \
                 --vpc-node-profile bz2-4x16 \
                 --ssh-private-key /etc/secret-volume/ssh-privatekey \
