@@ -49,11 +49,11 @@ periodics:
               value: "ci-kubernetes-s390x-conformance-latest-kubetest2"
           resources:
             requests:
-              cpu: 3
-              memory: "14Gi"
+              cpu: 2
+              memory: "7Gi"
             limits:
-              cpu: 3
-              memory: "14Gi"
+              cpu: 2
+              memory: "7Gi"
           command:
             - runner.sh
           args:
